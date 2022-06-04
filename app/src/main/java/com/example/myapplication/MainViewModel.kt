@@ -17,11 +17,10 @@ class MainViewModel(
     private val savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
 
-    // LiveDataの場合
+    // LiveData
     val text: MutableLiveData<String> = savedStateHandle.getLiveData(KEY_TEXT)
-    val intValueText = MutableLiveData("") // 表示用
 
-    // 非 LiveDataの場合
+    // non LiveData
     var intVal: Int?
         get() {
             return savedStateHandle.get<Int?>(KEY_INT_VALUE)
@@ -30,10 +29,11 @@ class MainViewModel(
             intValueText.value = value?.toString() ?: ""
             savedStateHandle.set<Int?>(KEY_INT_VALUE, value)
         }
+    val intValueText = MutableLiveData("") // for display
 
-    // 非 Parcelable / Serializableの場合
+    // non Parcelable / Serializable
     private var _bitmap: Bitmap? = null
-    val bitmap: MutableLiveData<Bitmap> = MutableLiveData(_bitmap) // 表示用
+    val bitmap: MutableLiveData<Bitmap> = MutableLiveData(_bitmap) // for display
 
     init {
         savedStateHandle.get<Int>(KEY_INT_VALUE)?.let {
@@ -51,7 +51,7 @@ class MainViewModel(
         }
     }
 
-    // Bitmapの保存に使用
+    // Used to save Bitmap
     private fun Bitmap.toBundle(): Bundle {
         val filename = "aaaaaa_temp.png" // 日付入れるとか重複しない仕組みもあっていいかも
         val file = File(getApplication<Application>().cacheDir, filename)
@@ -63,7 +63,7 @@ class MainViewModel(
         return bundleOf(BITMAP_TEMP_FILENAME to filename)
     }
 
-    // Bitmapの復元に使用
+    // Used to restore Bitmap
     private fun restoreBitmap(bundle: Bundle): Bitmap? {
         Log.d(TAG, "RESTORING BITMAP")
         var bitmap: Bitmap? = null
