@@ -21,11 +21,12 @@ class MainViewModel(
     val text: MutableLiveData<String> = savedStateHandle.getLiveData(KEY_TEXT)
 
     // non LiveData
-    var intVal: Int?
+    private var intVal: Int? = null
         get() {
             return savedStateHandle.get<Int?>(KEY_INT_VALUE)
         }
         set(value) {
+            field = value
             intValueText.value = value?.toString() ?: ""
             savedStateHandle.set<Int?>(KEY_INT_VALUE, value)
         }
